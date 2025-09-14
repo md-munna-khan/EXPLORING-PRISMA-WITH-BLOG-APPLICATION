@@ -99,3 +99,23 @@ By using this project, students will learn how to:
 * Build modular APIs
 * Manage environment variables
 * Structure scalable backend projects
+
+## 49-1 Clone Starter Project and Run
+
+- clone the repo and setup
+- lets install prisma
+
+[prisma with postgres](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases-typescript-prismaPostgres)
+
+```
+npm install prisma typescript tsx @types/node --save-dev
+
+```
+
+```
+npx prisma init
+```
+
+- set the env from here
+
+[env](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/connect-your-database-typescript-postgresql)
