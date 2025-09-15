@@ -37,6 +37,7 @@ model User {
   isVerified Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  posts Post []
 }
 
 // Post Model
@@ -48,7 +49,9 @@ model Post {
   isFeatured Boolean @default(false)
   tags String[]
   views Int @default(0)
-  author Int
+  authorId Int
+  author   User   @relation(fields: [authorId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
