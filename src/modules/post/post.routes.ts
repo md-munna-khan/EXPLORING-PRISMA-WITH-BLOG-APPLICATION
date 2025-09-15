@@ -7,6 +7,22 @@ router.post(
     "/",
     postController.createPost
 )
+router.get(
+    "/",
+    postController.getAllPosts
+)
+router.get(
+    "/:id",
+    postController.getPostsById
+)
+router.delete(
+    "/:id",
+    postController.postDeleted
+)
+router.patch(
+    "/:id",
+    postController.postUpdated
+)
 
 
 export const postRouter = router

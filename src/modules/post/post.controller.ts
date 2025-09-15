@@ -10,10 +10,50 @@ res.status(201).json(result)
        res.status(500).send(error)
     }
 }
+const   getAllPosts = async(req:Request,res:Response)=>{
+    try {
+        const result = await postService.getAllPosts ()
+res.status(201).json(result)
+    } catch (error) {
+       res.status(500).send(error)
+    }
+}
+
+//id
+const  getPostsById  = async(req:Request,res:Response)=>{
+    try {
+        const result = await postService.getPostsById  (Number(req.params.id))
+res.status(201).json(result)
+    } catch (error) {
+       res.status(500).send(error)
+    }
+}
+//deleted
+const   postDeleted  = async(req:Request,res:Response)=>{
+    try {
+        const result = await postService. postDeleted  (Number(req.params.id))
+res.status(201).json(result)
+    } catch (error) {
+       res.status(500).send(error)
+    }
+}
+//deleted
+const   postUpdated = async(req:Request,res:Response)=>{
+    try {
+        const result = await postService. postUpdated  (Number(req.params.id),req.body)
+res.status(201).json(result)
+    } catch (error) {
+       res.status(500).send(error)
+    }
+}
 
 
 
 export const postController={
-    createPost 
+    createPost ,
+    getAllPosts,
+    getPostsById,
+    postDeleted,
+    postUpdated
    
 }
