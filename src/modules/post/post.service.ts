@@ -117,6 +117,56 @@ const postUpdated = async (id: number, data: Partial<any>) => {
   });
   return result;
 };
+const getBlogState= async () => {
+return await prisma.$transaction(async(tx)=>{
+  const aggregates = await tx.post.aggregate({
+_count:true,
+_sum:{views:true},
+_avg:{views:true},
+_max:{views:true},
+_min:{views:true}
+  })
+  const featuredCount= await tx.post.count({
+    where:{
+      isFeatured:true
+    }
+   
+  })
+
+  const topFeatured = await tx.post.findFirst({
+    where:{isFeatured:true},
+     orderBy:{views:"desc"}
+  })
+
+const lastWeek=new Date();
+lastWeek.setDate(lastWeek.getDate() - 7)
+
+const lastWeekPostCount = await tx.post.count({
+  where:{
+    createdAt:{
+      gte:lastWeek
+    }
+  }
+})
+  return {
+    stats:{
+      totalPosts:aggregates._count??0,
+      totalViews:aggregates._sum.views??0,
+      avgViews:aggregates._avg.views??0,
+      minimumViews:aggregates._min.views??0,
+      maximumViews:aggregates._max.views??0,
+   
+    },
+    featured:{
+      count:featuredCount,
+      topPost:topFeatured,
+      
+    },
+    lastWeekPostCount
+  }
+})
+
+};
 
 export const postService = {
   createPost,
@@ -124,4 +174,5 @@ export const postService = {
   getPostsById,
   postDeleted,
   postUpdated,
+  getBlogState
 };

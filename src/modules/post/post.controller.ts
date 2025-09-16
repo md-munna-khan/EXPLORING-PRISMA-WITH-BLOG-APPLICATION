@@ -54,6 +54,15 @@ res.status(201).json(result)
        res.status(500).send(error)
     }
 }
+//deleted
+const   getBlogState = async(req:Request,res:Response)=>{
+    try {
+        const result = await postService.getBlogState ()
+res.status(201).json(result)
+    } catch (error) {
+       res.status(500).send(error)
+    }
+}
 
 
 
@@ -62,6 +71,7 @@ export const postController={
     getAllPosts,
     getPostsById,
     postDeleted,
-    postUpdated
+    postUpdated,
+    getBlogState
    
 }
