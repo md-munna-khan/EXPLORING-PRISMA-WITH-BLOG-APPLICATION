@@ -14,7 +14,8 @@ const   getAllPosts = async(req:Request,res:Response)=>{
     try {
         const page= Number(req.query.page) || 1;
         const limit= Number(req.query.limit)|| 10;
-        const result = await postService.getAllPosts ({page,limit})
+        const search= String(req.query.search )|| "";
+        const result = await postService.getAllPosts ({page,limit,search})
 res.status(201).json(result)
     } catch (error) {
        res.status(500).send(error)

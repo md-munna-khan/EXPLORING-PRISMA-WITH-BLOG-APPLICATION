@@ -39,13 +39,105 @@ const firstQueryResults = await prisma.post.findMany({
     id: 'asc',
   },
 })
+```
 ![alt text](image-2.png)
 // Bookmark your location in the result set - in this
 // case, the ID of the last post in the list of 4.
 
 - we will hit in postman 
 
-```
+```sql
 {{url}}/post?page=1&limit=3
 ```
 - lets make it work 
+
+## 50-2 Pagination & Searching
+
+
+
+- pagination logic 
+![alt text](image-3.png)
+
+
+- post.controller.ts 
+
+```ts
+const getAllPosts = async (req: Request, res: Response) => {
+    try {
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+
+        const result = await PostService.getAllPosts({page,limit});
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ error: "Failed to fetch posts", details: err });
+    }
+};
+```
+
+- post.service.ts 
+
+```ts 
+const getAllPosts = async ({ page, limit }: { page: number, limit: number }) => {
+    console.log(page, limit)
+    const skip = (page - 1) * limit
+    const result = await prisma.post.findMany({
+        skip,
+        take: limit
+    });
+    return result;
+};
+```
+#### now lets figure out the searching 
+
+- postman hit 
+
+```
+{{url}}/post?page=1&limit=3&search=Deploying
+```
+- post.controller.ts 
+
+```ts 
+const getAllPosts = async (req: Request, res: Response) => {
+    try {
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+        const search = (req.query.search as string) || ""
+
+        const result = await PostService.getAllPosts({page,limit, search});
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ error: "Failed to fetch posts", details: err });
+    }
+};
+
+```
+- post.service.ts 
+
+```ts 
+const getAllPosts = async ({ page, limit, search }: { page: number, limit: number, search :string }) => {
+    console.log(page, limit)
+    const skip = (page - 1) * limit
+    const result = await prisma.post.findMany({
+        skip,
+        take: limit,
+        where  :{
+            OR : [
+                {
+                    title : {
+                        contains : search,
+                        mode: 'insensitive'
+                    }
+                },
+                {
+                    content : {
+                        contains : search,
+                        mode: 'insensitive'
+                    }
+                }
+            ]
+        }
+    });
+    return result;
+};
+```
