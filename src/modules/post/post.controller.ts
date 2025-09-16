@@ -14,8 +14,9 @@ const   getAllPosts = async(req:Request,res:Response)=>{
     try {
         const page= Number(req.query.page) || 1;
         const limit= Number(req.query.limit)|| 10;
-        const search= String(req.query.search )|| "";
-        const result = await postService.getAllPosts ({page,limit,search})
+        const search= (req.query.search as string )|| "";
+        const isFeatured= req.query.isFeatured?req.query.isFeatured ==="true":undefined;
+        const result = await postService.getAllPosts ({page,limit,search,isFeatured})
 res.status(201).json(result)
     } catch (error) {
        res.status(500).send(error)
