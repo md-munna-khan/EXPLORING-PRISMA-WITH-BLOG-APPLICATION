@@ -22,17 +22,21 @@ const getAllPosts= async ({
     limit =10,
     search,
     isFeatured,
-    tags
+    tags,
+    sortBy,
+    sortOrder
 }:{
     page?:number,
     limit?:number,
     search?:string,
     isFeatured?:boolean,
-    tags?:string[]
+    tags?:string[],
+    sortBy?:string  ,
+    sortOrder?:string
 })=>{
 
 const skip = (page-1) * limit
-console.log({tags})
+
 const where:any={
     AND:[
         search && {
@@ -58,9 +62,21 @@ const where:any={
 const result = await prisma.post.findMany({
 skip,
 take:limit,
-where
-})
-return result
+where,
+orderBy:{
+    [sortBy as string]:sortOrder
+}
+});
+const total = await prisma.post.count({where})
+return {
+    data:result,
+    pagination:{
+        page,
+        limit,
+        total,
+        totalPages:Math.ceil(total/limit)
+    }
+}
 };
 
 // id

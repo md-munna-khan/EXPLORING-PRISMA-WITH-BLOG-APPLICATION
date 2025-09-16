@@ -17,7 +17,10 @@ const   getAllPosts = async(req:Request,res:Response)=>{
         const search= (req.query.search as string )|| ""; 
      const isFeatured= req.query.isFeatured?req.query.isFeatured ==="true":undefined;
 const tags = req.query.tags?(req.query.tags as string).split(","):[]
-        const result = await postService.getAllPosts ({page,limit,search,isFeatured,tags})
+const sortBy = (req.query.sortBy as string)|| "createdAt";
+const sortOrder = (req.query.sortOrder as string)|| "desc"
+
+        const result = await postService.getAllPosts ({page,limit,search,isFeatured,tags,sortBy,sortOrder})
 res.status(201).json(result)
     } catch (error) {
        res.status(500).send(error)
