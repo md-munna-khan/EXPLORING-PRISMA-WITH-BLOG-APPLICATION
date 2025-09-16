@@ -21,16 +21,18 @@ const getAllPosts= async ({
     page=1,
     limit =10,
     search,
-    isFeatured
+    isFeatured,
+    tags
 }:{
     page?:number,
     limit?:number,
     search?:string,
-    isFeatured?:boolean
+    isFeatured?:boolean,
+    tags?:string[]
 })=>{
 
 const skip = (page-1) * limit
-console.log({isFeatured})
+console.log({tags})
 const where:any={
     AND:[
         search && {
@@ -49,7 +51,8 @@ const where:any={
         }
     ]
         },
-        typeof isFeatured==="boolean" && {isFeatured}
+        typeof isFeatured==="boolean" && {isFeatured},
+        tags && tags.length > 0 && {tags:{hasEvery:tags}}
     ].filter(Boolean)
 }
 const result = await prisma.post.findMany({

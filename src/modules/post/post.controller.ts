@@ -14,9 +14,10 @@ const   getAllPosts = async(req:Request,res:Response)=>{
     try {
         const page= Number(req.query.page) || 1;
         const limit= Number(req.query.limit)|| 10;
-        const search= (req.query.search as string )|| "";
-        const isFeatured= req.query.isFeatured?req.query.isFeatured ==="true":undefined;
-        const result = await postService.getAllPosts ({page,limit,search,isFeatured})
+        const search= (req.query.search as string )|| ""; 
+     const isFeatured= req.query.isFeatured?req.query.isFeatured ==="true":undefined;
+const tags = req.query.tags?(req.query.tags as string).split(","):[]
+        const result = await postService.getAllPosts ({page,limit,search,isFeatured,tags})
 res.status(201).json(result)
     } catch (error) {
        res.status(500).send(error)
